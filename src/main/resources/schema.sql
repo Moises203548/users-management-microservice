@@ -31,3 +31,23 @@ VALUES (
     'ACTIVE'
 );
 
+
+-- =============================================
+-- Tabla de canciones (entidad asignada: Cancion)
+-- =============================================
+CREATE TABLE IF NOT EXISTS canciones (
+    id                  VARCHAR(36)  NOT NULL PRIMARY KEY,
+    nombre              VARCHAR(150) NOT NULL,
+    ritmo               VARCHAR(80)  NOT NULL,
+    duracion_segundos   INT          NOT NULL,
+    album               VARCHAR(150) NOT NULL,
+    posicion_en_album   INT          NOT NULL,
+    banda               VARCHAR(150) NOT NULL,
+    interprete          VARCHAR(150) NOT NULL,
+    autor               VARCHAR(150) NOT NULL,
+    fecha_lanzamiento   DATE         NOT NULL,
+    created_at          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at          DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT chk_canciones_duracion CHECK (duracion_segundos > 0),
+    CONSTRAINT chk_canciones_posicion CHECK (posicion_en_album > 0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
