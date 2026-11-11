@@ -1,9 +1,12 @@
 package com.jcaa.usersmanagement.infrastructure.entrypoint.rest.advice;
 
+import com.jcaa.usersmanagement.domain.exception.CancionAlreadyExistsException;
+import com.jcaa.usersmanagement.domain.exception.CancionNotFoundException;
 import com.jcaa.usersmanagement.domain.exception.DomainException;
 import com.jcaa.usersmanagement.domain.exception.InvalidCredentialsException;
 import com.jcaa.usersmanagement.domain.exception.UserAlreadyExistsException;
 import com.jcaa.usersmanagement.domain.exception.UserNotFoundException;
+import com.jcaa.usersmanagement.infrastructure.adapter.persistence.exception.CancionPersistenceException;
 import com.jcaa.usersmanagement.infrastructure.adapter.persistence.exception.PersistenceException;
 import com.jcaa.usersmanagement.infrastructure.entrypoint.rest.dto.response.ApiErrorResponse;
 import jakarta.validation.ConstraintViolationException;
@@ -27,6 +30,19 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(UserAlreadyExistsException.class)
   @ResponseStatus(HttpStatus.CONFLICT)
   public ApiErrorResponse handleUserAlreadyExists(final UserAlreadyExistsException exception) {
+    return new ApiErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage());
+  }
+
+  @ExceptionHandler(CancionNotFoundException.class)
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public ApiErrorResponse handleCancionNotFound(final CancionNotFoundException exception) {
+    return new ApiErrorResponse(HttpStatus.NOT_FOUND.value(), exception.getMessage());
+  }
+
+  @ExceptionHandler(CancionAlreadyExistsException.class)
+  @ResponseStatus(HttpStatus.CONFLICT)
+  public ApiErrorResponse handleCancionAlreadyExists(
+      final CancionAlreadyExistsException exception) {
     return new ApiErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage());
   }
 
@@ -66,6 +82,13 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(PersistenceException.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ApiErrorResponse handlePersistence(final PersistenceException ignored) {
+    return new ApiErrorResponse(
+        HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error de persistencia.");
+  }
+
+  @ExceptionHandler(CancionPersistenceException.class)
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public ApiErrorResponse handleCancionPersistence(final CancionPersistenceException ignored) {
     return new ApiErrorResponse(
         HttpStatus.INTERNAL_SERVER_ERROR.value(), "Error de persistencia.");
   }
